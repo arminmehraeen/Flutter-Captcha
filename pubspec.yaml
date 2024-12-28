@@ -1,6 +1,6 @@
 name: flutter_captcha_form_field
 description: A customizable Flutter form field widget for CAPTCHA verification
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/arminmehraeen/Flutter-Captcha
 
 environment:

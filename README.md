@@ -44,7 +44,7 @@ import 'package:flutter_captcha_form_field/flutter_captcha_form_field.dart';
 ## Usage
 
 ```dart
-Widget CapCaptchaFormField = CaptchaFormField() ;
+Widget CaptchaFormField = CaptchaFormField() ;
 ```
 
 ## Additional information
