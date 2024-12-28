@@ -25,20 +25,20 @@ install from pub.dev
 
 ```dart
 dependencies:
-  flutter_captcha: ^0.0.1
+  flutter_captcha_form_field: ^0.0.1
 ```
 
 install from github
 
 ```dart
 dependencies:
-  flutter_captcha:
+  flutter_captcha_form_field:
     git:
       url: https://github.com/arminmehraeen/Flutter-Captcha.git
 ```
 
 ```dart
-import 'package:flutter_captcha/flutter_captcha.dart';
+import 'package:flutter_captcha_form_field/flutter_captcha_form_field.dart';
 ```
 
 ## Usage
