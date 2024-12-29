@@ -69,7 +69,7 @@ class _CaptchaFormFieldState extends State<CaptchaFormField> {
       _captcha = String.fromCharCodes(
         Iterable.generate(
           widget.captchaLength,
-              (_) => characters.codeUnitAt(random.nextInt(characters.length)),
+          (_) => characters.codeUnitAt(random.nextInt(characters.length)),
         ),
       );
     });
@@ -111,7 +111,8 @@ class _CaptchaFormFieldState extends State<CaptchaFormField> {
               child: Container(
                 decoration: widget.captchaBackground ??
                     BoxDecoration(
-                      gradient: LinearGradient(colors: [Colors.white, Colors.grey[300]!]),
+                      gradient: LinearGradient(
+                          colors: [Colors.white, Colors.grey[300]!]),
                     ),
                 padding: const EdgeInsets.all(5.0),
                 child: AnimatedSwitcher(
@@ -121,7 +122,8 @@ class _CaptchaFormFieldState extends State<CaptchaFormField> {
                     key: ValueKey(_captcha),
                     style: widget.captchaTextStyle ??
                         widget.captchaTheme?.textTheme.bodyText1 ??
-                        const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -141,7 +143,8 @@ class _CaptchaFormFieldState extends State<CaptchaFormField> {
       child: Container(
         decoration: widget.captchaBackground ??
             BoxDecoration(
-              gradient: LinearGradient(colors: [Colors.white, Colors.grey[300]!]),
+              gradient:
+                  LinearGradient(colors: [Colors.white, Colors.grey[300]!]),
             ),
         padding: const EdgeInsets.all(5.0),
         child: AnimatedSwitcher(
