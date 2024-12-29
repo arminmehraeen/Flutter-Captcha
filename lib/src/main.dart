@@ -1,66 +1,96 @@
-import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-enum CaptchaComplexity { easy, medium, hard }
-
+/// A widget that provides a CAPTCHA form field for user input.
+///
+/// This widget generates a CAPTCHA string for validation and includes
+/// options for customization such as label text, input decoration, and validation logic.
 class CaptchaFormField extends StatefulWidget {
+  /// The length of the generated CAPTCHA.
+  ///
+  /// Defaults to 6 characters.
   final int captchaLength;
-  final Duration captchaDuration;
-  final String? labelText;
-  final InputDecoration? inputDecoration;
-  final Function(String)? onChanged;
-  final String? Function(String? input, String generatedCaptcha)? validator;
-  final CaptchaComplexity captchaComplexity;
-  final BoxDecoration? captchaBackground;
-  final TextStyle? captchaTextStyle;
-  final ThemeData? captchaTheme;
-  final String? requiredErrorMessage;
-  final String? mismatchErrorMessage;
 
+  /// The label text displayed above the input field.
+  ///
+  /// Defaults to "CAPTCHA".
+  final String? labelText;
+
+  /// Custom decoration for the input field.
+  ///
+  /// Overrides the default decoration if provided.
+  final InputDecoration? inputDecoration;
+
+  /// A callback triggered when the input value changes.
+  final Function(String)? onChanged;
+
+  /// A validator function to check the input against the generated CAPTCHA.
+  ///
+  /// Defaults to a function that checks if the input matches the CAPTCHA.
+  final String? Function(String? input, String generatedCaptcha)? validator;
+
+  /// The background color of the CAPTCHA text.
+  final Color? captchaBackground;
+
+  /// The text style of the CAPTCHA.
+  final TextStyle? captchaTextStyle;
+
+  /// The complexity level of the CAPTCHA (e.g., Simple, Medium, Complex).
+  ///
+  /// Defaults to `CaptchaComplexity.medium`.
+  final CaptchaComplexity complexity;
+
+  /// Creates a CAPTCHA form field.
   const CaptchaFormField({
     Key? key,
     this.captchaLength = 6,
-    this.captchaDuration = const Duration(minutes: 1),
     this.labelText = 'CAPTCHA',
     this.inputDecoration,
     this.onChanged,
     this.validator,
-    this.captchaComplexity = CaptchaComplexity.medium,
     this.captchaBackground,
     this.captchaTextStyle,
-    this.captchaTheme,
-    this.requiredErrorMessage,
-    this.mismatchErrorMessage,
+    this.complexity = CaptchaComplexity.medium,
   }) : super(key: key);
 
   @override
   State<CaptchaFormField> createState() => _CaptchaFormFieldState();
 }
 
+/// Defines the complexity levels of the CAPTCHA.
+enum CaptchaComplexity {
+  /// Simple CAPTCHA with only uppercase letters.
+  simple,
+
+  /// Medium CAPTCHA with both uppercase letters and numbers.
+  medium,
+
+  /// Complex CAPTCHA with uppercase letters, numbers, and special characters.
+  complex,
+}
+
 class _CaptchaFormFieldState extends State<CaptchaFormField> {
   late String _captcha;
   late TextEditingController _controller;
-  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
     _generateCaptcha();
-    _startTimer();
   }
 
+  /// Generates a new CAPTCHA string based on the selected complexity level.
   void _generateCaptcha() {
     String characters;
-    switch (widget.captchaComplexity) {
-      case CaptchaComplexity.easy:
-        characters = '0123456789';
+    switch (widget.complexity) {
+      case CaptchaComplexity.simple:
+        characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         break;
       case CaptchaComplexity.medium:
         characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         break;
-      case CaptchaComplexity.hard:
+      case CaptchaComplexity.complex:
         characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#\$%^&*';
         break;
     }
@@ -69,31 +99,27 @@ class _CaptchaFormFieldState extends State<CaptchaFormField> {
       _captcha = String.fromCharCodes(
         Iterable.generate(
           widget.captchaLength,
-          (_) => characters.codeUnitAt(random.nextInt(characters.length)),
+              (_) => characters.codeUnitAt(random.nextInt(characters.length)),
         ),
       );
     });
   }
 
-  void _startTimer() {
-    _timer = Timer.periodic(widget.captchaDuration, (timer) {
-      _generateCaptcha();
-    });
-  }
-
+  /// The default validator for the CAPTCHA.
+  ///
+  /// Ensures that the input matches the generated CAPTCHA.
   String? _defaultValidator(String? input, String generatedCaptcha) {
     if (input == null || input.isEmpty) {
-      return widget.requiredErrorMessage ?? 'CAPTCHA is required';
+      return 'CAPTCHA is required';
     }
     if (input != generatedCaptcha) {
-      return widget.mismatchErrorMessage ?? 'CAPTCHA does not match';
+      return 'CAPTCHA does not match';
     }
     return null;
   }
 
   @override
   void dispose() {
-    _timer.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -109,22 +135,16 @@ class _CaptchaFormFieldState extends State<CaptchaFormField> {
               borderRadius: BorderRadius.circular(5),
               onTap: _generateCaptcha,
               child: Container(
-                decoration: widget.captchaBackground ??
-                    BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [Colors.white, Colors.grey[300]!]),
-                    ),
                 padding: const EdgeInsets.all(5.0),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  child: Text(
-                    _captcha,
-                    key: ValueKey(_captcha),
-                    style: widget.captchaTextStyle ??
-                        widget.captchaTheme?.textTheme.bodyText1 ??
-                        const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+                color: widget.captchaBackground ?? Colors.grey.shade200,
+                child: Text(
+                  _captcha,
+                  style: widget.captchaTextStyle ??
+                      const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                 ),
               ),
             ),
@@ -134,30 +154,6 @@ class _CaptchaFormFieldState extends State<CaptchaFormField> {
       validator: widget.validator != null
           ? (value) => widget.validator!(value, _captcha)
           : (value) => _defaultValidator(value, _captcha),
-    );
-  }
-
-  Widget previewCaptcha() {
-    return InkWell(
-      onTap: _generateCaptcha,
-      child: Container(
-        decoration: widget.captchaBackground ??
-            BoxDecoration(
-              gradient:
-                  LinearGradient(colors: [Colors.white, Colors.grey[300]!]),
-            ),
-        padding: const EdgeInsets.all(5.0),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: Text(
-            _captcha,
-            key: ValueKey(_captcha),
-            style: widget.captchaTextStyle ??
-                widget.captchaTheme?.textTheme.bodyText1 ??
-                const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
     );
   }
 }

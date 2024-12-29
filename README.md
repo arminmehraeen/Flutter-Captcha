@@ -25,7 +25,7 @@ install from pub.dev
 
 ```dart
 dependencies:
-  flutter_captcha_form_field: ^0.0.1
+  flutter_captcha_form_field: ^0.0.4
 ```
 
 install from github

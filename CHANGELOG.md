@@ -31,3 +31,8 @@
 
 ### Notes
 - This version introduces enhanced customization options and automatic refresh for the CAPTCHA. Ensure to test periodic updates and styling in your app before deployment.
+
+## [0.0.4]
+### Improved
+- Added DartDoc comments for public APIs to improve usability and readability.
+  
