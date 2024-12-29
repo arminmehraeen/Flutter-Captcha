@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.1]
+- A customizable Flutter form field widget for CAPTCHA verification, ensuring secure user authentication.
+
+## [0.0.2]
+### Added
+- **CAPTCHA generation**: Basic CAPTCHA generation using alphanumeric characters with a customizable length (`captchaLength`, default: 6).
+- **Manual CAPTCHA refresh**: Users can regenerate the CAPTCHA manually by tapping the CAPTCHA text in the suffix.
+- **Validation support**: Added `validator` callback for custom validation and a default validator to check for required input and CAPTCHA match.
+- **Customizable label and input**: Support for `labelText` and `inputDecoration` to customize the input field appearance.
+- **Change listener**: Added `onChanged` callback to track changes in the input.
+
+### Fixed
+- Proper disposal of the `TextEditingController` in the `dispose` method to prevent memory leaks.
+
 ## [0.0.3]
 ### Added
 - **Timer-based CAPTCHA refresh**: Introduced automatic CAPTCHA regeneration every `captchaDuration` seconds using a periodic timer.
